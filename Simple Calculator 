@@ -84,4 +84,4 @@ root.title("Simple Calculator")
 calc = Calculator(root)
 
 # Start the main loop
-root.mainloop()
+root.mainloop() 

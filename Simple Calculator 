@@ -1,0 +1,87 @@
+# Import the tkinter library
+import tkinter as tk
+
+# Define a Calculator class
+class Calculator:
+    def __init__(self, master):
+        # Initialize the master window
+        self.master = master
+        # Set the background color of the master window
+        self.master.configure(bg='#2f4f7f')
+        
+        # Create an entry field for displaying calculations
+        self.entry = tk.Entry(master, width=35, borderwidth=5, font=('Arial', 20), bg='#f0f0f0')
+        self.entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+
+        # Call the create_buttons method to create the calculator buttons
+        self.create_buttons()
+
+    def create_buttons(self):
+        # Define the buttons for the calculator
+        buttons = [
+            '7', '8', '9', '/',
+            '4', '5', '6', '*',
+            '1', '2', '3', '-',
+            '0', '.', '=', '+'
+        ]
+
+        # Initialize row and column values
+        row_val = 1
+        col_val = 0
+
+        # Loop through the buttons and create them
+        for button in buttons:
+            # Set the color for the button
+            if button == '=':
+                color = '#34c759'  # Green for equals
+            else:
+                color = '#4CAF50'  # Green for numbers and operators
+
+            # Create the button and grid it
+            tk.Button(self.master, text=button, width=10, height=3, font=('Arial', 14), bg=color, fg='white', command=lambda button=button: self.click_button(button)).grid(row=row_val, column=col_val, padx=5, pady=5)
+            col_val += 1
+            if col_val > 3:
+                col_val = 0
+                row_val += 1
+
+        # Create the Clear and Delete buttons
+        tk.Button(self.master, text="Clear", width=21, height=2, font=('Arial', 14), bg='#f44336', fg='white', command=self.clear_entry).grid(row=row_val, column=0, columnspan=2, padx=5, pady=5)
+        tk.Button(self.master, text="Delete", width=21, height=2, font=('Arial', 14), bg='#f44336', fg='white', command=self.delete_char).grid(row=row_val, column=2, columnspan=2, padx=5, pady=5)
+
+        # Add some extra space at the bottom
+        tk.Label(self.master, text="", bg='#2f4f7f').grid(row=row_val+1, column=0, columnspan=4, padx=10, pady=10)
+
+    # Method to handle button clicks
+    def click_button(self, button):
+        # If the equals button is clicked, evaluate the expression
+        if button == '=':
+            try:
+                result = eval(self.entry.get())
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, str(result))
+            except Exception as e:
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, "Error")
+        # Otherwise, insert the button's text into the entry field
+        else:
+            self.entry.insert(tk.END, button)
+
+    # Method to clear the entry field
+    def clear_entry(self):
+        self.entry.delete(0, tk.END)
+
+    # Method to delete the last character from the entry field
+    def delete_char(self):
+        current = self.entry.get()
+        self.entry.delete(0, tk.END)
+        self.entry.insert(tk.END, current[:-1])
+
+# Create the main window
+root = tk.Tk()
+root.title("Simple Calculator")
+
+# Create an instance of the Calculator class
+calc = Calculator(root)
+
+# Start the main loop
+root.mainloop()
